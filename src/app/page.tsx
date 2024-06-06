@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input"
 import {
   Sheet,
   SheetContent,
@@ -95,10 +96,13 @@ const handleEdit = (modalidade: Modalidade) => {
 return (
   <main>
     <Header />
-    <h1>Modalidade</h1>
+    <div className='flex flex-row'>
+    
     <Sheet open={open} onOpenChange={setOpen}>
+    <Input className='m-2' placeholder="Pesquisar Modalidades" />
       <SheetTrigger asChild>
-        <Button onClick={() => { setIsEditing(false); resetForm(); }}>Cadastrar Modalidade</Button>
+        
+        <Button className="m-2" onClick={() => { setIsEditing(false); resetForm(); }}>Cadastrar Modalidade</Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -206,6 +210,7 @@ return (
         </form>
       </SheetContent>
     </Sheet>
+    </div>
     <ModalidadesList updateList={updateList} onEdit={handleEdit} />
   </main>
 );

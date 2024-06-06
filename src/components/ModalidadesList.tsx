@@ -1,7 +1,7 @@
 // components/ModalidadesList.tsx
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
+
 
 interface Modalidade {
   id: number;
@@ -61,15 +61,15 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
 
   return (
     <div>
-      <Input placeholder="Pesquisar Modalidades" />
+      
       <h2>Modalidades Cadastradas</h2>
       <ul>
         {modalidades.map((modalidade) => (
           <li className='p-4 m-2 bg-slate-950 text-white rounded' key={modalidade.id}>
             <h3>{modalidade.nome}</h3>
             <p>{modalidade.descricao}</p>
-            <Button onClick={() => onEdit(modalidade)}>Editar</Button>
-            <Button onClick={() => handleDelete(modalidade.id)}>Excluir</Button>
+            <Button className='mr-2' onClick={() => onEdit(modalidade)}>Editar</Button>
+            <Button className='bg-red-600' onClick={() => handleDelete(modalidade.id)}>Excluir</Button>
           </li>
         ))}
       </ul>
