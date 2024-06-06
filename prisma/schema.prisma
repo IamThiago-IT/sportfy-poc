@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model ModalidadeEsportiva {
+  id                     Int      @id @default(autoincrement())
+  nome                   String
+  descricao              String
+  imagem                 String?
+  numero_jogadores       Int?
+  categoria              String?
+  equipamento_necessario String?
+  popularidade           String?
+  origem                 String?
+  status                 Status
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+  Regras                 Regras[]
+
+  @@map("ModalidadeEsportiva")
+}
+
+model Regras {
+  id                      Int                 @id @default(autoincrement())
+  modalidade_esportiva_id Int
+  descricao               String
+  ModalidadeEsportiva     ModalidadeEsportiva @relation(fields: [modalidade_esportiva_id], references: [id], onDelete: Cascade)
+
+  @@map("Regras")
+}
+
+enum Status {
+  ativo
+  inativo
+}
