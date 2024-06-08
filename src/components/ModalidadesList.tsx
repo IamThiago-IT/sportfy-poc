@@ -1,7 +1,5 @@
-// components/ModalidadesList.tsx
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-
 
 interface Modalidade {
   id: number;
@@ -16,8 +14,8 @@ interface Modalidade {
 }
 
 interface ModalidadesListProps {
-  updateList: boolean;  // Novo prop para detectar mudanças
-  onEdit: (modalidade: Modalidade) => void;  // Função para editar uma modalidade
+  updateList: boolean;
+  onEdit: (modalidade: Modalidade) => void;
 }
 
 export default function ModalidadesList({ updateList, onEdit }: ModalidadesListProps) {
@@ -33,22 +31,21 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
       setModalidades(data);
     } catch (error) {
       console.error('Erro ao obter modalidades:', error);
-      // Use fake data in case of error
-      // setModalidades(fakeModalidades);
     }
   };
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await fetch(`/api/modalidades/${id}`, {
+      const response = await fetch(`/api/modalidades?id=${id}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
-        setModalidades(modalidades.filter(modalidade => modalidade.id !== id));
         console.log('Modalidade excluída com sucesso!');
+        setModalidades((prevModalidades) => prevModalidades.filter(modalidade => modalidade.id !== id));
       } else {
-        console.error('Erro ao excluir modalidade');
+        const errorData = await response.json();
+        console.error('Erro ao excluir modalidade:', errorData);
       }
     } catch (error) {
       console.error('Erro ao excluir modalidade:', error);
@@ -57,11 +54,10 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
 
   useEffect(() => {
     fetchModalidades();
-  }, [updateList]);  // Reexecuta quando updateList mudar
+  }, [updateList]);
 
   return (
     <div>
-      
       <h2>Modalidades Cadastradas</h2>
       <ul>
         {modalidades.map((modalidade) => (

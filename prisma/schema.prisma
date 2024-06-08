@@ -13,6 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Status {
+  ativo
+  inativo
+}
+
 model ModalidadeEsportiva {
   id                     Int      @id @default(autoincrement())
   nome                   String
@@ -23,7 +28,7 @@ model ModalidadeEsportiva {
   equipamento_necessario String?
   popularidade           String?
   origem                 String?
-  status                 Status
+  status                 Status   @default(ativo)
   created_at             DateTime @default(now())
   updated_at             DateTime @updatedAt
   Regras                 Regras[]
@@ -38,9 +43,4 @@ model Regras {
   ModalidadeEsportiva     ModalidadeEsportiva @relation(fields: [modalidade_esportiva_id], references: [id], onDelete: Cascade)
 
   @@map("Regras")
-}
-
-enum Status {
-  ativo
-  inativo
 }

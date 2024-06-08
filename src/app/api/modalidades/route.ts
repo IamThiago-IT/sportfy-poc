@@ -1,31 +1,65 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/db/index';
 
-// Rota para buscar todas as modalidades esportivas
 export async function GET() {
   try {
     const modalidades = await prisma.modalidadeEsportiva.findMany();
-    return NextResponse.json(modalidades);
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json(modalidades, { status: 200 });
+  } catch (err) {
+    return NextResponse.json({ error: 'Erro ao buscar modalidades' }, { status: 500 });
   }
 }
 
-// Rota para criar uma nova modalidade esportiva
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request) {
   try {
-    const regras = await req.json();
-    const insertedRules = await Promise.all(regras.map(async (regra: { descricao: string }) => {
-      const newRegra = await prisma.regras.create({
-        data: {
-          modalidade_esportiva_id: parseInt(params.id),
-          descricao: regra.descricao,
-        },
-      });
-      return newRegra;
-    }));
-    return NextResponse.json(insertedRules, { status: 201 });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    const data = await request.json();
+    // Adicionando o campo "status" com valor padrão "ativo"
+    const newData = { ...data, status: 'ativo' }; // Atualize para "ativo"
+    console.log('Dados recebidos para criação:', newData);
+    
+    const novaModalidade = await prisma.modalidadeEsportiva.create({ data: newData });
+    return NextResponse.json(novaModalidade, { status: 201 });
+  } catch (err) {
+    console.error('Erro ao criar modalidade:', err);
+    return NextResponse.json({ error: 'Erro ao criar modalidade' }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  if (!id) {
+    return NextResponse.json({ error: 'ID é necessário' }, { status: 400 });
+  }
+
+  try {
+    const data = await request.json();
+    const updatedModalidade = await prisma.modalidadeEsportiva.update({
+      where: { id: Number(id) },
+      data,
+    });
+    return NextResponse.json(updatedModalidade, { status: 200 });
+  } catch (err) {
+    return NextResponse.json({ error: 'Erro ao atualizar modalidade' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  if (!id) {
+    return NextResponse.json({ error: 'ID é necessário' }, { status: 400 });
+  }
+
+  try {
+    await prisma.modalidadeEsportiva.delete({
+      where: { id: Number(id) },
+    });
+    return NextResponse.json({ message: 'Modalidade excluída com sucesso' }, { status: 200 }); // Usando 200 com uma mensagem de sucesso
+  } catch (err) {
+    console.error('Erro ao excluir modalidade:', err);
+    return NextResponse.json({ error: 'Erro ao excluir modalidade' }, { status: 500 });
   }
 }

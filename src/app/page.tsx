@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import {
@@ -16,6 +16,8 @@ import ModalidadesList from '@/components/ModalidadesList';
 import { Modalidade } from '@/types/interfaces'
  
 export default function Home() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [modalidades, setModalidades] = useState<Modalidade[]>([]);
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
   const [numeroJogadores, setNumeroJogadores] = useState('');
@@ -52,32 +54,44 @@ const handleSubmit = async (e: { preventDefault: () => void; }) => {
     equipamento_necessario: equipamentoNecessario,
     popularidade,
     origem,
-    imagem
+    imagem,
   };
 
   try {
-    const response = await fetch(`/api/modalidades/${isEditing ? editingId : ''}`, {
-      method: isEditing ? 'PUT' : 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    let response;
+    if (isEditing && editingId !== null) {
+      response = await fetch(`/api/modalidades?id=${editingId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+    } else {
+      response = await fetch(`/api/modalidades`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+    }
 
     if (response.ok) {
-      console.log(`Modalidade ${isEditing ? 'editada' : 'cadastrada'} com sucesso!`);
+      console.log('Modalidade cadastrada com sucesso!');
       resetForm();
       setOpen(false);
-      setIsEditing(false);
-      setEditingId(null);
       setUpdateList(!updateList);
     } else {
-      console.error(`Erro ao ${isEditing ? 'editar' : 'cadastrar'} modalidade`);
+      const errorData = await response.json();
+      console.error('Erro ao cadastrar modalidade:', errorData);
     }
   } catch (error) {
-    console.error(`Erro ao ${isEditing ? 'editar' : 'cadastrar'} modalidade:`, error);
+    console.error('Erro ao cadastrar modalidade:', error);
   }
 };
+
+
 
 const handleEdit = (modalidade: Modalidade) => {
   setNome(modalidade.nome);
@@ -93,13 +107,35 @@ const handleEdit = (modalidade: Modalidade) => {
   setOpen(true);
 };
 
+const fetchModalidades = async () => {
+  try {
+    const response = await fetch(`/api/modalidades?nome=${searchTerm}`);
+    if (!response.ok) {
+      throw new Error('Erro na requisição');
+    }
+    const data = await response.json();
+    setModalidades(data);
+  } catch (error) {
+    console.error('Erro ao obter modalidades:', error);
+  }
+};
+
+useEffect(() => {
+  fetchModalidades();
+}, [searchTerm, updateList]);
+
 return (
   <main>
     <Header />
     <div className='flex flex-row'>
     
     <Sheet open={open} onOpenChange={setOpen}>
-    <Input className='m-2' placeholder="Pesquisar Modalidades" />
+    <Input 
+          className='m-2' 
+          placeholder="Pesquisar Modalidades" 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       <SheetTrigger asChild>
         
         <Button className="m-2" onClick={() => { setIsEditing(false); resetForm(); }}>Cadastrar Modalidade</Button>
