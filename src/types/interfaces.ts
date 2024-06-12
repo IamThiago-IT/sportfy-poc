@@ -11,3 +11,8 @@ export interface Modalidade {
   origem: string;
   imagem: string;
 }
+
+export interface ModalidadesListProps {
+  updateList: boolean;
+  onEdit: (modalidade: Modalidade) => void;
+}

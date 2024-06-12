@@ -8,23 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-
-interface Modalidade {
-  id: number;
-  nome: string;
-  descricao: string;
-  numero_jogadores: number;
-  categoria: string;
-  equipamento_necessario: string;
-  popularidade: string;
-  origem: string;
-  imagem: string;
-}
-
-interface ModalidadesListProps {
-  updateList: boolean;
-  onEdit: (modalidade: Modalidade) => void;
-}
+import { Modalidade, ModalidadesListProps } from '@/types/interfaces'
 
 export default function ModalidadesList({ updateList, onEdit }: ModalidadesListProps) {
   const [modalidades, setModalidades] = useState<Modalidade[]>([]);
@@ -95,7 +79,7 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
                       Origem:   {modalidade.origem}
                     </DialogDescription>
                     <DialogDescription>
-                      Origem:   {modalidade.imagem}
+                      imagem:    {modalidade.imagem}
                     </DialogDescription>
                   </DialogHeader>
                 </DialogContent>
