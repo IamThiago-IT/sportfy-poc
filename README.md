@@ -42,7 +42,13 @@ mysql
 │   ├── migrations
 │   └── schema.prisma
 ├── components
-│   └── prisma.ts
+│   └── ui
+│       ├── route.ts
+│       ├── route.ts
+│       ├── route.ts
+│       └── route.ts
+│   ├── migrations
+│   └── migrations
 │   
 ├── node_modules
 ├── .env
