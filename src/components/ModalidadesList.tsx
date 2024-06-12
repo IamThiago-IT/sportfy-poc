@@ -50,10 +50,10 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
 
   return (
     <div>
-      <h2>Modalidades Cadastradas</h2>
-      <ul>
+      
+      <ul className='grid grid-cols-2 gap-2'>
         {modalidades.map((modalidade) => (
-          <li className='p-4 m-2 bg-slate-950 dark:bg-white dark:text-black text-white rounded' key={modalidade.id}>
+          <li className=' p-6 m-2 bg-slate-950 dark:bg-white dark:text-black text-white rounded' key={modalidade.id}>
             <Dialog>
               <DialogTrigger>
                 <h3>{modalidade.nome}</h3>
@@ -80,15 +80,16 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
                     </DialogDescription>
                     <DialogDescription>
                       imagem:    {modalidade.imagem}
+                      <img src={modalidade.imagem} />
                     </DialogDescription>
                   </DialogHeader>
                 </DialogContent>
               </DialogTrigger>  
            </Dialog>
             
-            <p>{modalidade.descricao}</p>
+            <p className="mb-4">{modalidade.descricao}</p>
             <Button className='mr-2' onClick={() => onEdit(modalidade)}>Editar</Button>
-            <Button className='bg-red-600' onClick={() => handleDelete(modalidade.id)}>Excluir</Button>
+            <Button className='bg-red-600 hover:bg-red-700 dark:text-slate-100 dark:hover:bg-red-700' onClick={() => handleDelete(modalidade.id)}>Excluir</Button>
           </li>
         ))}
       </ul>

@@ -138,7 +138,7 @@ return (
         />
       <SheetTrigger asChild>
         
-        <Button className="m-2" onClick={() => { setIsEditing(false); resetForm(); }}>Cadastrar Modalidade</Button>
+        <Button className="m-2 dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-800" onClick={() => { setIsEditing(false); resetForm(); }}>Cadastrar Modalidade</Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -149,7 +149,7 @@ return (
         </SheetHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <div>
-              <label htmlFor="nome" className="block text-sm font-medium text-gray-700">Nome:</label>
+              <label htmlFor="nome" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Nome:</label>
               <input
                 type="text"
                 id="nome"
@@ -161,7 +161,7 @@ return (
             </div>
 
             <div>
-              <label htmlFor="descricao" className="block text-sm font-medium text-gray-700">Descrição:</label>
+              <label htmlFor="descricao" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Descrição:</label>
               <textarea
                 id="descricao"
                 value={descricao}
@@ -172,7 +172,7 @@ return (
             </div>
 
             <div>
-              <label htmlFor="numeroJogadores" className="block text-sm font-medium text-gray-700">Número de Jogadores:</label>
+              <label htmlFor="numeroJogadores" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Número de Jogadores:</label>
               <input
                 type="number"
                 id="numeroJogadores"
@@ -196,7 +196,7 @@ return (
             </div>
 
             <div>
-              <label htmlFor="equipamentoNecessario" className="block text-sm font-medium text-gray-700">Equipamento Necessário:</label>
+              <label htmlFor="equipamentoNecessario" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Equipamento Necessário:</label>
               <input
                 type="text"
                 id="equipamentoNecessario"
@@ -208,7 +208,7 @@ return (
             </div>
 
             <div>
-              <label htmlFor="popularidade" className="block text-sm font-medium text-gray-700">Popularidade:</label>
+              <label htmlFor="popularidade" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Popularidade:</label>
               <input
                 type="text"
                 id="popularidade"
@@ -220,7 +220,7 @@ return (
             </div>
 
             <div>
-              <label htmlFor="origem" className="block text-sm font-medium text-gray-700">Origem:</label>
+              <label htmlFor="origem" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Origem:</label>
               <input
                 type="text"
                 id="origem"
@@ -232,17 +232,17 @@ return (
             </div>
 
             <div>
-              <label htmlFor="imagem" className="block text-sm font-medium text-gray-700">Imagem:</label>
+              <label htmlFor="imagem" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Imagem:</label>
               <input
                 type="text"
                 id="imagem"
                 value={imagem}
                 onChange={(e) => setImagem(e.target.value)}
                 required
-                className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
+                className='mt-1 block w-full p-2 border border-gray-300 rounded-md '
               />
             </div>
-          <Button type="submit">{isEditing ? 'Salvar Alterações' : 'Cadastrar'}</Button>
+          <Button type="submit" className='dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-800'>{isEditing ? 'Salvar Alterações' : 'Cadastrar'}</Button>
         </form>
       </SheetContent>
     </Sheet>
