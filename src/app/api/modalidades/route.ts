@@ -1,14 +1,36 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/db/index';
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const nome_startsWith = searchParams.get('nome_startsWith');
+  
+  console.log('Parâmetro nome_startsWith:', nome_startsWith);
+
   try {
-    const modalidades = await prisma.modalidadeEsportiva.findMany();
+    let modalidades;
+    if (nome_startsWith) {
+      modalidades = await prisma.modalidadeEsportiva.findMany({
+        where: {
+          nome: {
+            startsWith: nome_startsWith,
+          },
+        },
+      });
+    } else {
+      modalidades = await prisma.modalidadeEsportiva.findMany();
+    }
+
+    console.log('Modalidades encontradas:', modalidades);
+
     return NextResponse.json(modalidades, { status: 200 });
   } catch (err) {
+    console.error('Erro ao buscar modalidades:', err);
     return NextResponse.json({ error: 'Erro ao buscar modalidades' }, { status: 500 });
   }
 }
+
+
 
 export async function POST(request: Request) {
   try {

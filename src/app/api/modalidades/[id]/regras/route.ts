@@ -1,3 +1,6 @@
+// pages/api/modalidades/regras/routes.ts
+'use server'
+
 import { NextResponse } from 'next/server';
 import prisma from '@/db/index';
 

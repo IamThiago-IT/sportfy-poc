@@ -10,6 +10,12 @@ export interface Modalidade {
   popularidade: string;
   origem: string;
   imagem: string;
+  regras: Regra[];
+}
+
+export interface Regra {
+  id: number;
+  descricao: string;
 }
 
 export interface ModalidadesListProps {

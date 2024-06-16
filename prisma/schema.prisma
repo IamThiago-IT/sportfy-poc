@@ -20,7 +20,7 @@ enum Status {
 
 model ModalidadeEsportiva {
   id                     Int      @id @default(autoincrement())
-  nome                   String
+  nome                   String   @unique
   descricao              String
   imagem                 String?
   numero_jogadores       Int?

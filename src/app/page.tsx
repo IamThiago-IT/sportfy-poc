@@ -11,8 +11,19 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Checkbox } from "@/components/ui/checkbox"
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
+
 import Header from '@/components/Header';
 import ModalidadesList from '@/components/ModalidadesList';
+
 import { Modalidade } from '@/types/interfaces'
  
 export default function Home() {
@@ -26,118 +37,154 @@ export default function Home() {
   const [popularidade, setPopularidade] = useState('');
   const [origem, setOrigem] = useState('');
   const [imagem, setImagem] = useState('');
-const [open, setOpen] = useState(false);
-const [updateList, setUpdateList] = useState(false);
-const [isEditing, setIsEditing] = useState(false);
-const [editingId, setEditingId] = useState<number | null>(null);
+  const [open, setOpen] = useState(false);
+  const [updateList, setUpdateList] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [filteredModalidades, setFilteredModalidades] = useState<Modalidade[]>([]); // Estado para as modalidades filtradas
+ 
 
-const resetForm = () => {
-  setNome('');
-  setDescricao('');
-  setNumeroJogadores('');
-  setCategoria('');
-  setEquipamentoNecessario('');
-  setPopularidade('');
-  setOrigem('');
-  setImagem('');
-};
-
-
-const handleSubmit = async (e: { preventDefault: () => void; }) => {
-  e.preventDefault();
-
-  const data = {
-    nome,
-    descricao,
-    numero_jogadores: parseInt(numeroJogadores),
-    categoria,
-    equipamento_necessario: equipamentoNecessario,
-    popularidade,
-    origem,
-    imagem,
+  const resetForm = () => {
+    setNome('');
+    setDescricao('');
+    setNumeroJogadores('');
+    setCategoria('');
+    setEquipamentoNecessario('');
+    setPopularidade('');
+    setOrigem('');
+    setImagem('');
   };
 
-  try {
-    let response;
-    if (isEditing && editingId !== null) {
-      response = await fetch(`/api/modalidades?id=${editingId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    const data = {
+      nome,
+      descricao,
+      numero_jogadores: parseInt(numeroJogadores),
+      categoria,
+      equipamento_necessario: equipamentoNecessario,
+      popularidade,
+      origem,
+      imagem,
+    };
+
+    try {
+      let response;
+      if (isEditing && editingId !== null) {
+        response = await fetch(`/api/modalidades?id=${editingId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+      } else {
+        response = await fetch(`/api/modalidades`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+      }
+
+      if (response.ok) {
+        console.log('Modalidade cadastrada com sucesso!');
+        resetForm();
+        setOpen(false);
+        setUpdateList(!updateList);
+      } else {
+        const errorData = await response.json();
+        console.error('Erro ao cadastrar modalidade:', errorData);
+      }
+    } catch (error) {
+      console.error('Erro ao cadastrar modalidade:', error);
+    }
+  };
+
+  const handleEdit = (modalidade: Modalidade) => {
+    setNome(modalidade.nome);
+    setDescricao(modalidade.descricao);
+    setNumeroJogadores(modalidade.numero_jogadores.toString());
+    setCategoria(modalidade.categoria);
+    setEquipamentoNecessario(modalidade.equipamento_necessario);
+    setPopularidade(modalidade.popularidade);
+    setOrigem(modalidade.origem);
+    setImagem(modalidade.imagem);
+    setEditingId(modalidade.id);
+    setIsEditing(true);
+    setOpen(true);
+  };
+
+  const fetchModalidades = async () => {
+    try {
+      const response = await fetch('/api/modalidades');
+      if (!response.ok) {
+        throw new Error('Erro na requisição');
+      }
+      const data = await response.json();
+      setModalidades(data);
+    } catch (error) {
+      console.error('Erro ao obter modalidades:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchModalidades();
+  }, [updateList]);
+
+  // Atualiza as modalidades filtradas sempre que `searchTerm` ou `modalidades` mudar
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredModalidades(modalidades); // Se `searchTerm` estiver vazio, mostra todas as modalidades
     } else {
-      response = await fetch(`/api/modalidades`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      const filtered = modalidades.filter(modalidade =>
+        modalidade.nome.toLowerCase().startsWith(searchTerm.toLowerCase())
+      );
+      setFilteredModalidades(filtered);
     }
-
-    if (response.ok) {
-      console.log('Modalidade cadastrada com sucesso!');
-      resetForm();
-      setOpen(false);
-      setUpdateList(!updateList);
-    } else {
-      const errorData = await response.json();
-      console.error('Erro ao cadastrar modalidade:', errorData);
-    }
-  } catch (error) {
-    console.error('Erro ao cadastrar modalidade:', error);
-  }
-};
-
-
-
-const handleEdit = (modalidade: Modalidade) => {
-  setNome(modalidade.nome);
-  setDescricao(modalidade.descricao);
-  setNumeroJogadores(modalidade.numero_jogadores.toString());
-  setCategoria(modalidade.categoria);
-  setEquipamentoNecessario(modalidade.equipamento_necessario);
-  setPopularidade(modalidade.popularidade);
-  setOrigem(modalidade.origem);
-  setImagem(modalidade.imagem);
-  setEditingId(modalidade.id);
-  setIsEditing(true);
-  setOpen(true);
-};
-
-const fetchModalidades = async () => {
-  try {
-    const response = await fetch(`/api/modalidades?nome=${searchTerm}`);
-    if (!response.ok) {
-      throw new Error('Erro na requisição');
-    }
-    const data = await response.json();
-    setModalidades(data);
-  } catch (error) {
-    console.error('Erro ao obter modalidades:', error);
-  }
-};
-
-useEffect(() => {
-  fetchModalidades();
-}, [searchTerm, updateList]);
+  }, [searchTerm, modalidades]);
 
 return (
   <main>
     <Header />
-    <div className='flex flex-row'>
+    <div className='flex items-center justify-between'>
     
     <Sheet open={open} onOpenChange={setOpen}>
-    <Input 
-          className='m-2' 
-          placeholder="Pesquisar Modalidades" 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+    
+        <Popover>
+  <PopoverTrigger>   
+    <Button className="m-2 dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-800" >
+    <FontAwesomeIcon icon={faFilter} />   
+      Filtro
+    </Button>
+    </PopoverTrigger>
+    <PopoverContent className="p-4  rounded-lg shadow-md">
+  <h3 className="text-lg font-semibold mb-2">Filtrar por:</h3>
+  <div className="space-y-2">
+    <label className="flex items-center">
+      <Checkbox className="mr-2" />
+      <span>Text 1</span>
+    </label>
+    <label className="flex items-center">
+      <Checkbox className="mr-2" />
+      <span>Text 2</span>
+    </label>
+    <label className="flex items-center">
+      <Checkbox className="mr-2" />
+      <span>Text 3</span>
+    </label>
+    <label className="flex items-center">
+      <Checkbox className="mr-2" />
+      <span>Text 4</span>
+    </label>
+  </div>
+</PopoverContent>
+</Popover>
+   
       <SheetTrigger asChild>
-        
+      
         <Button className="m-2 dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-800" onClick={() => { setIsEditing(false); resetForm(); }}>Cadastrar Modalidade</Button>
       </SheetTrigger>
       <SheetContent>
@@ -246,6 +293,8 @@ return (
         </form>
       </SheetContent>
     </Sheet>
+
+ 
     </div>
     <ModalidadesList updateList={updateList} onEdit={handleEdit} />
   </main>
