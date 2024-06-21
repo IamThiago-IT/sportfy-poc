@@ -11,15 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { Checkbox } from "@/components/ui/checkbox"
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import { Textarea } from "@/components/ui/textarea"
 
 import Header from '@/components/Header';
 import ModalidadesList from '@/components/ModalidadesList';
@@ -36,6 +28,7 @@ export default function Home() {
   const [equipamentoNecessario, setEquipamentoNecessario] = useState('');
   const [popularidade, setPopularidade] = useState('');
   const [origem, setOrigem] = useState('');
+const [regras, setRegras] = useState<string[]>([]);
   const [imagem, setImagem] = useState('');
   const [open, setOpen] = useState(false);
   const [updateList, setUpdateList] = useState(false);
@@ -51,14 +44,16 @@ export default function Home() {
     setCategoria('');
     setEquipamentoNecessario('');
     setPopularidade('');
+
     setOrigem('');
     setImagem('');
   };
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-
+  
     const data = {
+      id: editingId, // Ensure the id is included
       nome,
       descricao,
       numero_jogadores: parseInt(numeroJogadores),
@@ -66,9 +61,10 @@ export default function Home() {
       equipamento_necessario: equipamentoNecessario,
       popularidade,
       origem,
+      regras,
       imagem,
     };
-
+  
     try {
       let response;
       if (isEditing && editingId !== null) {
@@ -88,7 +84,7 @@ export default function Home() {
           body: JSON.stringify(data),
         });
       }
-
+  
       if (response.ok) {
         console.log('Modalidade cadastrada com sucesso!');
         resetForm();
@@ -102,6 +98,7 @@ export default function Home() {
       console.error('Erro ao cadastrar modalidade:', error);
     }
   };
+  
 
   const handleEdit = (modalidade: Modalidade) => {
     setNome(modalidade.nome);
@@ -146,13 +143,28 @@ export default function Home() {
     }
   }, [searchTerm, modalidades]);
 
+  const handleRegrasChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const newRegras = [...regras];
+    newRegras[index] = e.target.value;
+    setRegras(newRegras);
+  };
+  
+  const addRegra = () => {
+    setRegras([...regras, '']);
+  };
+  
+  const removeRegra = (index: number) => {
+    const newRegras = regras.filter((_, i) => i !== index);
+    setRegras(newRegras);
+  };
+
 return (
   <main>
     <Header />
     <div className='flex items-center justify-between'>
     
     <Sheet open={open} onOpenChange={setOpen}>
-    
+    {/* 
         <Popover>
   <PopoverTrigger>   
     <Button className="m-2 dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-800" >
@@ -182,12 +194,12 @@ return (
   </div>
 </PopoverContent>
 </Popover>
-   
+   */}
       <SheetTrigger asChild>
       
         <Button className="m-2 dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-800" onClick={() => { setIsEditing(false); resetForm(); }}>Cadastrar Modalidade</Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="overflow-y-auto">
         <SheetHeader>
           <SheetTitle>{isEditing ? 'Editar Modalidade' : 'Cadastrar Nova Modalidade'}</SheetTitle>
           <SheetDescription>
@@ -230,17 +242,6 @@ return (
               />
             </div>
 
-            <div>
-              <label htmlFor="categoria" className="block text-sm font-medium text-gray-700">Categoria:</label>
-              <input
-                type="text"
-                id="categoria"
-                value={categoria}
-                onChange={(e) => setCategoria(e.target.value)}
-                required
-                className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
-              />
-            </div>
 
             <div>
               <label htmlFor="equipamentoNecessario" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Equipamento Necessário:</label>
@@ -254,17 +255,7 @@ return (
               />
             </div>
 
-            <div>
-              <label htmlFor="popularidade" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Popularidade:</label>
-              <input
-                type="text"
-                id="popularidade"
-                value={popularidade}
-                onChange={(e) => setPopularidade(e.target.value)}
-                required
-                className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
-              />
-            </div>
+
 
             <div>
               <label htmlFor="origem" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Origem:</label>
@@ -288,9 +279,23 @@ return (
                 required
                 className='mt-1 block w-full p-2 border border-gray-300 rounded-md '
               />
-            </div>
-          <Button type="submit" className='dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-800'>{isEditing ? 'Salvar Alterações' : 'Cadastrar'}</Button>
-        </form>
+              <label>Regras:</label>
+      {regras.map((regra, index) => (
+        <div key={index} className="flex items-center">
+          <Textarea 
+            
+            value={regra}
+            onChange={(e) => handleRegrasChange(e, index)}
+            required
+            className='mt-1 block w-full p-2 border border-gray-300 rounded-md '
+          />
+          <button type="button"  className="ml-2 bg-red-500 text-white p-2 rounded" onClick={() => removeRegra(index)}>Remover</button>
+        </div>
+      ))}
+      <button type="button" className="mt-2 bg-blue-500 text-white p-2 rounded" onClick={addRegra}>Adicionar Regra</button>
+    </div>
+    <Button type="submit">{isEditing ? 'Salvar Alterações' : 'Cadastrar'}</Button>
+  </form>
       </SheetContent>
     </Sheet>
 

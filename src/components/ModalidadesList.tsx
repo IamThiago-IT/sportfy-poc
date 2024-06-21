@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -8,12 +8,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Modalidade, ModalidadesListProps } from '@/types/interfaces'
+} from "@/components/ui/dialog";
+import { Modalidade, ModalidadesListProps } from '@/types/interfaces';
 
 export default function ModalidadesList({ updateList, onEdit }: ModalidadesListProps) {
   const [modalidades, setModalidades] = useState<Modalidade[]>([]);
-  const [filteredModalidades, setFilteredModalidades] = useState<Modalidade[]>([]); // Estado para as modalidades filtradas
+  const [filteredModalidades, setFilteredModalidades] = useState<Modalidade[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const fetchModalidades = async () => {
@@ -33,15 +33,13 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
     fetchModalidades();
   }, [updateList]);
 
-  // Atualiza as modalidades filtradas sempre que `searchTerm` ou `modalidades` mudar
   useEffect(() => {
     if (searchTerm.trim() === '') {
-      setFilteredModalidades(modalidades); // Se `searchTerm` estiver vazio, mostra todas as modalidades
+      setFilteredModalidades(modalidades);
     } else {
       const filtered = modalidades.filter(modalidade =>
         modalidade.nome.toLowerCase().startsWith(searchTerm.toLowerCase())
       );
-      console.log('Modalidades filtradas:', filtered); // Log para verificar modalidades filtradas
       setFilteredModalidades(filtered);
     }
   }, [searchTerm, modalidades]);
@@ -64,55 +62,64 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
     }
   };
 
+  useEffect(() => {
+    console.log('Modalidades:', modalidades);
+  }, [modalidades]);
+
   return (
     <div>
-<div className="flex items-center justify-between">
-  <Input
-    className="m-2"
-    placeholder="Pesquisar Modalidades"
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-  />
+      <div className="flex items-center justify-between">
+        <Input
+          className="m-2"
+          placeholder="Pesquisar Modalidades"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
     
-
       <ul className='grid grid-cols-2 gap-2'>
-         {filteredModalidades.map((modalidade) => (
-          <li className=' p-6 m-2 bg-slate-950 dark:bg-white dark:text-black text-white rounded' key={modalidade.id}>
+        {filteredModalidades.map((modalidade) => (
+          <li className='p-6 m-2 bg-slate-950 dark:bg-white dark:text-black text-white rounded' key={modalidade.id}>
             <Dialog>
               <DialogTrigger>
                 <h3>{modalidade.nome}</h3>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>{modalidade.nome}</DialogTitle>
-                    <DialogDescription>
-                      {modalidade.descricao}
-                    </DialogDescription>
-                    <DialogDescription>
-                      Numero de Jogadores: {modalidade.numero_jogadores}
-                    </DialogDescription>
-                    <DialogDescription>
-                      Categoria: {modalidade.categoria}
-                    </DialogDescription>
-                    <DialogDescription>
-                      Equipamentos necessarios: {modalidade.equipamento_necessario}
-                    </DialogDescription>
-                    <DialogDescription>
-                      Popularidade: {modalidade.popularidade}
-                    </DialogDescription>
-                    <DialogDescription>
-                      Origem: {modalidade.origem}
-                    </DialogDescription>
-                    <DialogDescription>
-                    Regras: {modalidade.regras ? modalidade.regras.length : 0}
-                    </DialogDescription>
-                    <DialogDescription>
-                      imagem: {modalidade.imagem}
-                      <img src={modalidade.imagem} alt={modalidade.nome} />
-                    </DialogDescription>
-                  </DialogHeader>
-                </DialogContent>
               </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>{modalidade.nome}</DialogTitle>
+                  <DialogDescription>
+                    {modalidade.descricao}
+                  </DialogDescription>
+                  <DialogDescription>
+                    Numero de Jogadores: {modalidade.numero_jogadores}
+                  </DialogDescription>
+                  <DialogDescription>
+                    Equipamentos necessarios: {modalidade.equipamento_necessario}
+                  </DialogDescription>
+                  <DialogDescription>
+                    Popularidade: {modalidade.popularidade}
+                  </DialogDescription>
+                  <DialogDescription>
+                    Origem: {modalidade.origem}
+                  </DialogDescription>
+                  <DialogDescription>
+                    Regras:
+                    <ul>
+                      {modalidade.regras && modalidade.regras.length > 0 ? (
+                        modalidade.regras.map((regra, index) => (
+                          <li key={index}>{regra.descricao}</li>
+                        ))
+                      ) : (
+                        <li>Nenhuma regra cadastrada</li>
+                      )}
+                    </ul>
+                  </DialogDescription>
+                  <DialogDescription>
+                    Imagem:
+                    <img src={modalidade.imagem} alt={modalidade.nome} />
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
             </Dialog>
 
             <p className="mb-4">{modalidade.descricao}</p>
