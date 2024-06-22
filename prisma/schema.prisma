@@ -33,7 +33,7 @@ model ModalidadeEsportiva {
 model Regra {
   id                      Int                 @id @default(autoincrement())
   modalidade_esportiva_id Int
-  descricao               String
+  descricao               String              @unique
   modalidadeEsportiva     ModalidadeEsportiva @relation(fields: [modalidade_esportiva_id], references: [id], onDelete: Cascade)
 
   @@map("Regras")

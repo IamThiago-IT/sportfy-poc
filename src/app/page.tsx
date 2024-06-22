@@ -109,7 +109,7 @@ export default function Home() {
     setPopularidade(modalidade.popularidade);
     setOrigem(modalidade.origem);
     setImagem(modalidade.imagem);
-    setRegras(modalidade.regras ? modalidade.regras.map(regra => regra.descricao) : []);
+    setRegras(modalidade.Regras ? modalidade.Regras.map(regra => regra.descricao) : []);
     setEditingId(modalidade.id);
     setIsEditing(true);
     setOpen(true);
@@ -144,7 +144,7 @@ export default function Home() {
     }
   }, [searchTerm, modalidades]);
 
-  const handleRegrasChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleRegrasChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
     const newRegras = [...regras];
     newRegras[index] = e.target.value;
     setRegras(newRegras);
@@ -160,44 +160,12 @@ export default function Home() {
   };
 
 return (
-  <main>
+  <main className='dark:bg-[#0D0D0D]'>
     <Header />
     <div className='flex items-center justify-between'>
     
     <Sheet open={open} onOpenChange={setOpen}>
-    {/* 
-        <Popover>
-  <PopoverTrigger>   
-    <Button className="m-2 dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-800" >
-    <FontAwesomeIcon icon={faFilter} />   
-      Filtro
-    </Button>
-    </PopoverTrigger>
-    <PopoverContent className="p-4  rounded-lg shadow-md">
-  <h3 className="text-lg font-semibold mb-2">Filtrar por:</h3>
-  <div className="space-y-2">
-    <label className="flex items-center">
-      <Checkbox className="mr-2" />
-      <span>Text 1</span>
-    </label>
-    <label className="flex items-center">
-      <Checkbox className="mr-2" />
-      <span>Text 2</span>
-    </label>
-    <label className="flex items-center">
-      <Checkbox className="mr-2" />
-      <span>Text 3</span>
-    </label>
-    <label className="flex items-center">
-      <Checkbox className="mr-2" />
-      <span>Text 4</span>
-    </label>
-  </div>
-</PopoverContent>
-</Popover>
-   */}
       <SheetTrigger asChild>
-      
         <Button className="m-2 dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-800" onClick={() => { setIsEditing(false); resetForm(); }}>Cadastrar Modalidade</Button>
       </SheetTrigger>
       <SheetContent className="overflow-y-auto">
@@ -208,99 +176,97 @@ return (
           </SheetDescription>
         </SheetHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-            <div>
-              <label htmlFor="nome" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Nome:</label>
-              <input
-                type="text"
-                id="nome"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                required
-                className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
-              />
-            </div>
+          <div>
+            <label htmlFor="nome" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Nome:</label>
+            <input
+              type="text"
+              id="nome"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+              className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
+            />
+          </div>
 
-            <div>
-              <label htmlFor="descricao" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Descrição:</label>
-              <textarea
-                id="descricao"
-                value={descricao}
-                onChange={(e) => setDescricao(e.target.value)}
-                required
-                className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
-              />
-            </div>
+          <div>
+            <label htmlFor="descricao" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Descrição:</label>
+            <textarea
+              id="descricao"
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
+              required
+              className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
+            />
+          </div>
 
-            <div>
-              <label htmlFor="numeroJogadores" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Número de Jogadores:</label>
-              <input
-                type="number"
-                id="numeroJogadores"
-                value={numeroJogadores}
-                onChange={(e) => setNumeroJogadores(e.target.value)}
-                required
-                className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
-              />
-            </div>
+          <div>
+            <label htmlFor="numeroJogadores" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Número de Jogadores:</label>
+            <input
+              type="number"
+              id="numeroJogadores"
+              value={numeroJogadores}
+              onChange={(e) => setNumeroJogadores(e.target.value)}
+              required
+              className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
+            />
+          </div>
 
+          <div>
+            <label htmlFor="equipamentoNecessario" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Equipamento Necessário:</label>
+            <input
+              type="text"
+              id="equipamentoNecessario"
+              value={equipamentoNecessario}
+              onChange={(e) => setEquipamentoNecessario(e.target.value)}
+              required
+              className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
+            />
+          </div>
 
-            <div>
-              <label htmlFor="equipamentoNecessario" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Equipamento Necessário:</label>
-              <input
-                type="text"
-                id="equipamentoNecessario"
-                value={equipamentoNecessario}
-                onChange={(e) => setEquipamentoNecessario(e.target.value)}
-                required
-                className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
-              />
-            </div>
+          <div>
+            <label htmlFor="origem" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Origem:</label>
+            <input
+              type="text"
+              id="origem"
+              value={origem}
+              onChange={(e) => setOrigem(e.target.value)}
+              required
+              className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
+            />
+          </div>
 
+          <div>
+            <label htmlFor="imagem" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Imagem:</label>
+            <input
+              type="text"
+              id="imagem"
+              value={imagem}
+              onChange={(e) => setImagem(e.target.value)}
+              required
+              className='mt-1 block w-full p-2 border border-gray-300 rounded-md '
+            />
+          </div>
 
-
-            <div>
-              <label htmlFor="origem" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Origem:</label>
-              <input
-                type="text"
-                id="origem"
-                value={origem}
-                onChange={(e) => setOrigem(e.target.value)}
-                required
-                className='mt-1 block w-full p-2 border border-gray-300 rounded-md'
-              />
-            </div>
-
-            <div>
-              <label htmlFor="imagem" className="block text-sm font-medium text-gray-700 dark:text-slate-100">Imagem:</label>
-              <input
-                type="text"
-                id="imagem"
-                value={imagem}
-                onChange={(e) => setImagem(e.target.value)}
-                required
-                className='mt-1 block w-full p-2 border border-gray-300 rounded-md '
-              />
-              <label>Regras:</label>
-      {regras.map((regra, index) => (
-        <div key={index} className="flex items-center">
-          <Textarea 
-            
-            value={regra}
-            onChange={(e) => handleRegrasChange(e, index)}
-            required
-            className='mt-1 block w-full p-2 border border-gray-300 rounded-md '
-          />
-          <button type="button"  className="ml-2 bg-red-500 text-white p-2 rounded" onClick={() => removeRegra(index)}>Remover</button>
-        </div>
-      ))}
-      <button type="button" className="mt-2 bg-blue-500 text-white p-2 rounded" onClick={addRegra}>Adicionar Regra</button>
-    </div>
-    <Button type="submit">{isEditing ? 'Salvar Alterações' : 'Cadastrar'}</Button>
-  </form>
+          <div>
+            <label>Regras:</label>
+            {regras.map((regra, index) => (
+              <div key={index} className="flex items-center">
+                <Textarea 
+                  value={regra}
+                  onChange={(e) => handleRegrasChange(e, index)}
+                  required
+                  className='mt-1 block w-full p-2 border border-gray-300 rounded-md '
+                />
+                <button type="button"  className="ml-2 bg-red-500 text-white p-2 rounded" onClick={() => removeRegra(index)}>Remover</button>
+              </div>
+            ))}
+            <button type="button" className="mt-2 bg-blue-500 text-white p-2 rounded" onClick={addRegra}>Adicionar Regra</button>
+          </div>
+          <Button type="submit">{isEditing ? 'Salvar Alterações' : 'Cadastrar'}</Button>
+        </form>
       </SheetContent>
     </Sheet>
 
- 
     </div>
     <ModalidadesList updateList={updateList} onEdit={handleEdit} />
   </main>
