@@ -28,7 +28,7 @@ export default function Home() {
   const [equipamentoNecessario, setEquipamentoNecessario] = useState('');
   const [popularidade, setPopularidade] = useState('');
   const [origem, setOrigem] = useState('');
-const [regras, setRegras] = useState<string[]>([]);
+  const [regras, setRegras] = useState<string[]>([]);
   const [imagem, setImagem] = useState('');
   const [open, setOpen] = useState(false);
   const [updateList, setUpdateList] = useState(false);
@@ -44,16 +44,16 @@ const [regras, setRegras] = useState<string[]>([]);
     setCategoria('');
     setEquipamentoNecessario('');
     setPopularidade('');
-
     setOrigem('');
     setImagem('');
+    setRegras([]);
   };
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
   
     const data = {
-      id: editingId, // Ensure the id is included
+      id: editingId,
       nome,
       descricao,
       numero_jogadores: parseInt(numeroJogadores),
@@ -109,6 +109,7 @@ const [regras, setRegras] = useState<string[]>([]);
     setPopularidade(modalidade.popularidade);
     setOrigem(modalidade.origem);
     setImagem(modalidade.imagem);
+    setRegras(modalidade.regras ? modalidade.regras.map(regra => regra.descricao) : []);
     setEditingId(modalidade.id);
     setIsEditing(true);
     setOpen(true);

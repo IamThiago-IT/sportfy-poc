@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -31,16 +25,16 @@ model ModalidadeEsportiva {
   status                 Status   @default(ativo)
   created_at             DateTime @default(now())
   updated_at             DateTime @updatedAt
-  Regras                 Regras[]
+  regras                 Regra[]
 
   @@map("ModalidadeEsportiva")
 }
 
-model Regras {
+model Regra {
   id                      Int                 @id @default(autoincrement())
   modalidade_esportiva_id Int
   descricao               String
-  ModalidadeEsportiva     ModalidadeEsportiva @relation(fields: [modalidade_esportiva_id], references: [id], onDelete: Cascade)
+  modalidadeEsportiva     ModalidadeEsportiva @relation(fields: [modalidade_esportiva_id], references: [id], onDelete: Cascade)
 
   @@map("Regras")
 }

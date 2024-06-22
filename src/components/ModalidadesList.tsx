@@ -23,6 +23,7 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
         throw new Error('Erro na requisição');
       }
       const data = await response.json();
+      console.log('Dados recebidos:', data); // Verificar os dados recebidos
       setModalidades(data);
     } catch (error) {
       console.error('Erro ao obter modalidades:', error);
@@ -63,7 +64,7 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
   };
 
   useEffect(() => {
-    console.log('Modalidades:', modalidades);
+    console.log('Modalidades:', modalidades); // Verificar o estado das modalidades
   }, [modalidades]);
 
   return (
@@ -81,8 +82,8 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
         {filteredModalidades.map((modalidade) => (
           <li className='p-6 m-2 bg-slate-950 dark:bg-white dark:text-black text-white rounded' key={modalidade.id}>
             <Dialog>
-              <DialogTrigger>
-                <h3>{modalidade.nome}</h3>
+              <DialogTrigger asChild>
+                <h3 className="cursor-pointer">{modalidade.nome}</h3>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -94,7 +95,7 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
                     Numero de Jogadores: {modalidade.numero_jogadores}
                   </DialogDescription>
                   <DialogDescription>
-                    Equipamentos necessarios: {modalidade.equipamento_necessario}
+                    Equipamentos Necessarios: {modalidade.equipamento_necessario}
                   </DialogDescription>
                   <DialogDescription>
                     Popularidade: {modalidade.popularidade}
@@ -105,8 +106,8 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
                   <DialogDescription>
                     Regras:
                     <ul>
-                      {modalidade.regras && modalidade.regras.length > 0 ? (
-                        modalidade.regras.map((regra, index) => (
+                      {modalidade.Regras && modalidade.Regras.length > 0 ? (
+                        modalidade.Regras.map((regra, index) => (
                           <li key={index}>{regra.descricao}</li>
                         ))
                       ) : (
@@ -123,7 +124,7 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
             </Dialog>
 
             <p className="mb-4">{modalidade.descricao}</p>
-            <p className="mb-4">Regras: {modalidade.regras ? modalidade.regras.length : 0}</p>
+            <p className="mb-4">Regras: {modalidade.Regras ? modalidade.Regras.length : 0}</p>
             <Button className='mr-2' onClick={() => onEdit(modalidade)}>Editar</Button>
             <Button className='bg-red-600 hover:bg-red-700 dark:text-slate-100 dark:hover:bg-red-700' onClick={() => handleDelete(modalidade.id)}>Excluir</Button>
           </li>

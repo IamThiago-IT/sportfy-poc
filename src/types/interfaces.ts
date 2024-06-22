@@ -1,22 +1,29 @@
 // types/interfaces.ts
 
+// types/interfaces.ts
+
+export interface Regra {
+  id: number;
+  modalidade_esportiva_id: number;
+  descricao: string;
+}
+
 export interface Modalidade {
   id: number;
   nome: string;
   descricao: string;
+  imagem: string;
   numero_jogadores: number;
   categoria: string;
   equipamento_necessario: string;
   popularidade: string;
   origem: string;
-  imagem: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
   regras: Regra[];
 }
 
-export interface Regra {
-  id: number;
-  descricao: string;
-}
 
 export interface ModalidadesListProps {
   updateList: boolean;
