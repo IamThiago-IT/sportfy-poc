@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ModeToggle } from "./theme/theme";
-import  LogoApp  from "@/app/sportfy.jpg"
+import  LogoApp  from "@/app/fotor-2024062315517.png"
 
 export default function Header() {
   return (

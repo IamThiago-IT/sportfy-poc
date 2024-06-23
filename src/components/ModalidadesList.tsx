@@ -16,6 +16,8 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
   const [filteredModalidades, setFilteredModalidades] = useState<Modalidade[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [activePlayers, setActivePlayers] = useState(0);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [modalidadeToDelete, setModalidadeToDelete] = useState<Modalidade | null>(null);
 
   const fetchModalidades = async () => {
     try {
@@ -24,7 +26,7 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
         throw new Error('Erro na requisição');
       }
       const data = await response.json();
-      console.log('Dados recebidos:', data); // Verificar os dados recebidos
+      console.log('Dados recebidos:', data);
       setModalidades(data);
     } catch (error) {
       console.error('Erro ao obter modalidades:', error);
@@ -46,15 +48,19 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
     }
   }, [searchTerm, modalidades]);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async () => {
+    if (!modalidadeToDelete) return;
+    
     try {
-      const response = await fetch(`/api/modalidades?id=${id}`, {
+      const response = await fetch(`/api/modalidades?id=${modalidadeToDelete.id}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
         console.log('Modalidade excluída com sucesso!');
-        setModalidades((prevModalidades) => prevModalidades.filter(modalidade => modalidade.id !== id));
+        setModalidades((prevModalidades) => prevModalidades.filter(modalidade => modalidade.id !== modalidadeToDelete.id));
+        setDeleteDialogOpen(false);
+        setModalidadeToDelete(null);
       } else {
         const errorData = await response.json();
         console.error('Erro ao excluir modalidade:', errorData);
@@ -65,7 +71,7 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
   };
 
   useEffect(() => {
-    console.log('Modalidades:', modalidades); // Verificar o estado das modalidades
+    console.log('Modalidades:', modalidades);
   }, [modalidades]);
 
   function formatDate(dateString: string | number | Date) {
@@ -140,11 +146,28 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
             <p className="mb-4">Regras: {modalidade.regras ? modalidade.regras.length : 0}</p>
             <div className="grid grid-cols-2 gap-4 place-content-center">
               <Button className='mr-2 bg-gray-200 hover:bg-gray-400 text-black dark:bg-slate-950 dark:text-white' onClick={() => onEdit(modalidade)}>Editar</Button>
-              <Button className='bg-red-600 hover:bg-red-700 dark:text-slate-100 dark:hover:bg-red-700' onClick={() => handleDelete(modalidade.id)}>Excluir</Button>
+              <Button className='bg-red-600 hover:bg-red-700 dark:text-slate-100 dark:hover:bg-red-700' onClick={() => { setModalidadeToDelete(modalidade); setDeleteDialogOpen(true); }}>Excluir</Button>
             </div>
           </li>
         ))}
       </ul>
+
+      {modalidadeToDelete && (
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirmar Exclusão</DialogTitle>
+              <DialogDescription>
+                Tem certeza que deseja excluir a modalidade "{modalidadeToDelete.nome}"?
+              </DialogDescription>
+            </DialogHeader>
+            <div className="mt-4 flex justify-end space-x-4">
+              <Button className='bg-gray-300 hover:bg-gray-400 text-black' onClick={() => setDeleteDialogOpen(false)}>Cancelar</Button>
+              <Button className='bg-red-600 hover:bg-red-700 text-white' onClick={handleDelete}>Excluir</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
