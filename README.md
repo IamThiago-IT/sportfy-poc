@@ -1,19 +1,48 @@
 # POC
 
 # Tecnologia
-front
-nextjs
-typescript
-tailwindcss
-shadcnui
-zod
 
-back
-node
-prisma
-typescript
-zod
-mysql
+## FrontEnd
+- Nextjs
+- Typescript
+- Tailwindcss
+- Shadcnui
+- Zod
+
+## Backend
+- Node
+- Prisma
+- Typescript
+- Zod
+- Mysql
+
+## Instalação
+para a instalar as dependecias do projeto voce pode usar seu gerenciador de pacotes favorito: ex npm, yarn, pnpm, bun!
+```
+npm install
+```
+
+## Iniciar Servidor
+para inicar o servidor podemos rodar o comando:
+```
+npm run dev
+```
+
+## Configuração do banco de dados
+Para ajustar seu banco de dados corretamente voce precisa do arquivo `.env`
+```
+DATABASE_URL="mysql://root:@localhost:3306/sportfy_poc"
+
+Explicação
+DATABASE_URL="DBA://user:password@localhost/name_database"
+```
+
+## Banco Estruturado
+para visualizar o banco estruturado, voce pode rodar esse comando
+```
+npm run prisma studio
+```
+
 
 # Estrutura de Pastas
 ```
