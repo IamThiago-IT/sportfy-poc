@@ -10,10 +10,10 @@ export async function GET(request: Request) {
     const modalidades = nome_startsWith 
       ? await prisma.modalidadeEsportiva.findMany({
           where: { nome: { startsWith: nome_startsWith } },
-          include: { Regras: true },
+          include: { regras: true },
         })
       : await prisma.modalidadeEsportiva.findMany({
-          include: { Regras: true },
+          include: { regras: true },
         });
 
     return NextResponse.json(modalidades, { status: 200 });
@@ -38,8 +38,9 @@ export async function POST(req: Request) {
         popularidade: data.popularidade,
         origem: data.origem,
         imagem: data.imagem,
+        nivel_contato_fisico: data.nivel_contato_fisico, // Adicionando o novo campo
         status: "ativo", // Valor padrão
-        Regras: {
+        regras: {
           create: data.regras.map((regra: string) => ({ descricao: regra })),
         },
       },
@@ -52,7 +53,6 @@ export async function POST(req: Request) {
   }
 }
 
-// Função para atualizar uma modalidade esportiva existente
 // Função para atualizar uma modalidade esportiva existente
 export async function PUT(req: Request) {
   const data = await req.json();
@@ -70,12 +70,13 @@ export async function PUT(req: Request) {
         popularidade: data.popularidade,
         origem: data.origem,
         imagem: data.imagem,
-        Regras: {
+        nivel_contato_fisico: data.nivel_contato_fisico, // Adicionando o novo campo
+        regras: {
           deleteMany: {}, // Deletar todas as regras antigas
           create: data.regras.map((regra: string) => ({ descricao: regra })),
         },
       },
-      include: { Regras: true },
+      include: { regras: true },
     });
 
     return NextResponse.json(updatedModalidade, { status: 200 });
@@ -84,7 +85,6 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'Erro ao atualizar modalidade' }, { status: 500 });
   }
 }
-
 
 // Função para excluir uma modalidade esportiva
 export async function DELETE(request: Request) {

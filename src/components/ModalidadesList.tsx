@@ -76,14 +76,14 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
       year: 'numeric'
     }).format(date);
   }
-  
+
   function generateActivePlayers() {
     return Math.floor(Math.random() * 499) + 1;
   }
+
   useEffect(() => {
     setActivePlayers(generateActivePlayers());
   }, []);
-  
 
   return (
     <div>
@@ -101,7 +101,7 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
           <li className='p-6 m-2 bg-slate-950 dark:bg-white dark:text-black text-white rounded' key={modalidade.id}>
             <Dialog>
               <DialogTrigger asChild>
-                <h3 className="cursor-pointer block text-lg font-medium  dark:text-gray-700 grid place-content-center">{modalidade.nome}</h3>
+                <h3 className="cursor-pointer block text-lg font-medium dark:text-gray-700 grid place-content-center">{modalidade.nome}</h3>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -110,42 +110,34 @@ export default function ModalidadesList({ updateList, onEdit }: ModalidadesListP
                     {modalidade.descricao}
                   </DialogDescription>
                   <DialogDescription>
-                    Numero de Jogadores: {modalidade.numero_jogadores}
+                    Número de jogadores por equipe: {modalidade.numero_jogadores}
                   </DialogDescription>
                   <DialogDescription>
                     Equipamentos Necessarios: {modalidade.equipamento_necessario}
                   </DialogDescription>
                   <DialogDescription>
-                    Popularidade: {modalidade.popularidade}
-                  </DialogDescription>
-                  <DialogDescription>
-                    Origem: {modalidade.origem}
+                   Nível de Contato Físico: {modalidade.nivel_contato_fisico}
                   </DialogDescription>
                   <DialogDescription>
                     Regras:
                     <ul>
-                      {modalidade.Regras && modalidade.Regras.length > 0 ? (
-                        modalidade.Regras.map((regra, index) => (
-                          <li key={index}>- {regra.descricao};</li>
+                      {modalidade.regras && modalidade.regras.length > 0 ? (
+                        modalidade.regras.map((regra, index) => (
+                          <li key={index}>• {regra.descricao}</li>
                         ))
                       ) : (
                         <li>Nenhuma regra cadastrada</li>
                       )}
                     </ul>
                   </DialogDescription>
-                  <DialogDescription>
-                    Imagem:
-                    <img src={modalidade.imagem} alt={modalidade.nome} />
-                  </DialogDescription>
                 </DialogHeader>
               </DialogContent>
             </Dialog>
 
             <p className="mb-4">{modalidade.descricao}</p>
-            
             <p className="mb-4">Jogadores Ativos: {activePlayers}</p>
             <p className="mb-4">Data de Criação: {formatDate(modalidade.created_at)}</p>
-            <p className="mb-4">Regras: {modalidade.Regras ? modalidade.Regras.length : 0}</p>
+            <p className="mb-4">Regras: {modalidade.regras ? modalidade.regras.length : 0}</p>
             <div className="grid grid-cols-2 gap-4 place-content-center">
               <Button className='mr-2 bg-gray-200 hover:bg-gray-400 text-black dark:bg-slate-950 dark:text-white' onClick={() => onEdit(modalidade)}>Editar</Button>
               <Button className='bg-red-600 hover:bg-red-700 dark:text-slate-100 dark:hover:bg-red-700' onClick={() => handleDelete(modalidade.id)}>Excluir</Button>

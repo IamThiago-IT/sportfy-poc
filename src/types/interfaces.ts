@@ -1,7 +1,5 @@
 // types/interfaces.ts
 
-// types/interfaces.ts
-
 export interface Regra {
   id: number;
   modalidade_esportiva_id: number;
@@ -22,8 +20,8 @@ export interface Modalidade {
   created_at: string;
   updated_at: string;
   regras: Regra[];
+  nivel_contato_fisico: string; // Novo campo adicionado
 }
-
 
 export interface ModalidadesListProps {
   updateList: boolean;

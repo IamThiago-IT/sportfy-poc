@@ -12,9 +12,15 @@ enum Status {
   inativo
 }
 
+enum NivelContatoFisico {
+  Baixo
+  Medio
+  Alto
+}
+
 model ModalidadeEsportiva {
-  id                     Int      @id @default(autoincrement())
-  nome                   String   @unique
+  id                     Int                 @id @default(autoincrement())
+  nome                   String              @unique
   descricao              String
   imagem                 String?
   numero_jogadores       Int?
@@ -22,9 +28,11 @@ model ModalidadeEsportiva {
   equipamento_necessario String?
   popularidade           String?
   origem                 String?
-  status                 Status   @default(ativo)
-  created_at             DateTime @default(now())
-  updated_at             DateTime @updatedAt
+  jogadores_ativos       Int?
+  nivel_contato_fisico   NivelContatoFisico? @default(Baixo)
+  status                 Status              @default(ativo)
+  created_at             DateTime            @default(now())
+  updated_at             DateTime            @updatedAt
   regras                 Regra[]
 
   @@map("ModalidadeEsportiva")
